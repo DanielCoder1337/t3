@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:js';
-
 import 'package:flutter/foundation.dart';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,21 +15,11 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Umbraco backend',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: Home(),
@@ -102,7 +90,8 @@ class DyanmicList extends State<ListDisplay> {
   
   Widget build (BuildContext ctxt) {
     return new Scaffold(
-      appBar: new AppBar(
+      appBar:
+      new AppBar(
         elevation: 0.1,
         backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
         title: Text("Products"),
@@ -111,6 +100,24 @@ class DyanmicList extends State<ListDisplay> {
             icon: Icon(Icons.home),
             onPressed: () {
               Navigator.pop(ctxt);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.shop),
+            onPressed: () {
+              Navigator.push(
+                ctxt,
+                MaterialPageRoute(builder: (context) => ListDisplay()),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                ctxt,
+                MaterialPageRoute(builder: (context) => PeopleListView()),
+              );
             },
           )
         ],
@@ -161,20 +168,73 @@ class DyanmicList extends State<ListDisplay> {
 
 class ProductsDetailViewState extends StatelessWidget {
   final Product product;
-
-  // In the constructor, require a Todo.
   ProductsDetailViewState({Key key, @required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Use the Todo to create the UI.
     return Scaffold(
-      appBar: AppBar(
+      appBar: new AppBar(
+        elevation: 0.1,
+        backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
         title: Text(product.name),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.home),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.shop),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PeopleListView()),
+              );
+            },
+          )
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Text(product.description),
+        child: Center(
+          child:Column(
+            children: <Widget>[
+              new Image.network(product.imageUrl),
+              Text("£"+product.price.toString(),style: TextStyle(fontWeight: FontWeight.bold),),
+              SizedBox(height: 32.0),
+              Text(product.description),
+              const SizedBox(height: 30),
+              RaisedButton(
+                onPressed: () {},
+                textColor: Colors.white,
+                padding: const EdgeInsets.all(0.0),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: <Color>[
+                        Color(0xFF0D47A1),
+                        Color(0xFF1976D2),
+                        Color(0xFF42A5F5),
+                      ],
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(10.0),
+                  child: const Text(
+                    'Add To Cart',
+                    style: TextStyle(fontSize: 20)
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -182,21 +242,65 @@ class ProductsDetailViewState extends StatelessWidget {
 
 class PeopleDetailView extends StatelessWidget {
   final People person;
-
-  // In the constructor, require a Todo.
   PeopleDetailView({Key key, @required this.person}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Use the Todo to create the UI.
-    return Scaffold(
-      appBar: AppBar(
+    return new Scaffold(
+      appBar: new AppBar(
+        elevation: 0.1,
+        backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
         title: Text(person.name),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.home),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.shop),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ListDisplay()),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Text(person.email),
+    body: Padding(
+      padding: EdgeInsets.all(32.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Center(
+            child: Text(
+            person.name,
+            style: Theme.of(context).textTheme.title,
+          ),
+          ),
+          SizedBox(height: 20.0),
+          Container(
+            padding: const EdgeInsets.all(32.0),
+            child: Row(
+            children: [
+              new Image.network(person.imageUrl),
+              Text(
+                "Email: " + person.email,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
+    ),
     );
   }
 }
@@ -210,7 +314,6 @@ class People {
   final String linkedIn;
   final String instagram;
   final String imageUrl;
-
 
   People({this.name, this.id, this.email,this.twitter, this.facebook, this.linkedIn, this.instagram, this.imageUrl});
 
@@ -230,7 +333,6 @@ class People {
 
 
 class PeopleListView extends StatelessWidget {
-  // In the constructor, require a Todo.
   PeopleListView({Key key}) : super(key: key);
   final peopleList = fetchPeople();
   @override
@@ -245,6 +347,24 @@ class PeopleListView extends StatelessWidget {
             icon: Icon(Icons.home),
             onPressed: () {
               Navigator.pop(ctxt);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.shop),
+            onPressed: () {
+              Navigator.push(
+                ctxt,
+                MaterialPageRoute(builder: (context) => ListDisplay()),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                ctxt,
+                MaterialPageRoute(builder: (context) => PeopleListView()),
+              );
             },
           )
         ],
@@ -294,7 +414,7 @@ class PeopleListView extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
-  Home({Key key,}) : super(key: key);
+  Home({Key key}) : super(key: key);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -341,9 +461,11 @@ class _MyHomePageState extends State<Home> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
+                  Center(child: Text(
                     'Welcome to this umbraco based site!',
+                    textAlign: TextAlign.center,
                     style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 36.0),
+                  ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 0.0, right: 0.0, top: 10.0),
